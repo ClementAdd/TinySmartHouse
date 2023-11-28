@@ -33,8 +33,6 @@ export class ControlController {
 
     @Post("blindOff")
     blindOff() {
-     return this.controlService.blindOff(this.port);
+        return this.controlService.blindOff(this.port);
     }
-
-
 }

@@ -25,5 +25,10 @@ export class SensorsController {
     getMotionSensorData(): Promise<string> {
         return this.sensorsService.getMotionSensorData();
     }
+
+    @Get("all")
+    getAll(): Promise<string> {
+        return this.sensorsService.getAll();
+    }
     
 }
