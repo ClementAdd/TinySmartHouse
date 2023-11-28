@@ -7,7 +7,7 @@ export class SensorsService {
     getTemperature(): string {
         const strTemperature = "";
 
-        const temp = SensorsController.housePort.write('GET_TEMP');
+        const temp = SensorsController.housePort.write('GET_TEMP\n');
         //return temp;
 
         return strTemperature;
@@ -16,7 +16,7 @@ export class SensorsService {
     getBarometry(): string {
         const strBarometry = "";
 
-        const baro = SensorsController.housePort.write('GET_BARO');
+        const baro = SensorsController.housePort.write('GET_BARO\n');
 
         return strBarometry;
     }
@@ -24,7 +24,7 @@ export class SensorsService {
     getHygrometry(): string {
         const strHygrometry = "";
 
-        const hygro = SensorsController.housePort.write('GET_HUMIDITY');
+        const hygro = SensorsController.housePort.write('GET_HUMIDITY\n');
         const hygrotest = SensorsController.housePort.read();
 
         console.log("hygro");
