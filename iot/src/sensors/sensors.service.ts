@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { SensorsController } from './sensors.controller';
+import { SerialPort } from 'serialport';
 
 @Injectable()
 export class SensorsService {
 
+    public static housePort = new SerialPort({
+        path: '/dev/tty.usbserial-1130',
+        baudRate: 9600,
+        autoOpen: true
+    })
+
     getTemperature(): string {
         const strTemperature = "";
 
-        const temp = SensorsController.housePort.write('GET_TEMP\n');
+        const temp = SensorsService.housePort.write('GET_TEMP\n');
         //return temp;
 
         return strTemperature;
@@ -16,7 +23,7 @@ export class SensorsService {
     getBarometry(): string {
         const strBarometry = "";
 
-        const baro = SensorsController.housePort.write('GET_BARO\n');
+        const baro = SensorsService.housePort.write('GET_BARO\n');
 
         return strBarometry;
     }
@@ -24,8 +31,8 @@ export class SensorsService {
     getHygrometry(): string {
         const strHygrometry = "";
 
-        const hygro = SensorsController.housePort.write('GET_HUMIDITY\n');
-        const hygrotest = SensorsController.housePort.read();
+        const hygro = SensorsService.housePort.write('GET_HUMIDITY\n');
+        const hygrotest = SensorsService.housePort.read();
 
         console.log("hygro");
         console.log(hygro);
