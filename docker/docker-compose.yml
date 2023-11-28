@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  # Database
+  db:
+    image: mysql:latest
+    volumes:
+      - db_data:/var/lib/mysql
+    container_name: MySQL
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: tiny-smart-house
+    networks:
+      - mysql-phpmyadmin
+
+  # phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: admin
+    networks:
+      - mysql-phpmyadmin
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitMQ
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq:/etc/rabbitmq/
+      - rabbitmq_lib:/var/lib/rabbitmq/
+      - rabbitmq_logs:/var/log/rabbitmq/
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+networks:
+  mysql-phpmyadmin:
+
+volumes:
+  db_data:
+  rabbitmq_logs:
+  rabbitmq_lib:
+  rabbitmq:
