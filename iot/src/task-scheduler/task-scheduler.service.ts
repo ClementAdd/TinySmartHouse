@@ -8,10 +8,12 @@ export class TaskSchedulerService {private readonly logger = new Logger(TaskSche
     @Cron(CronExpression.EVERY_MINUTE)
     cronSensors() {
         this.logger.log(SensorsController.getAll());
+        console.log(SensorsController.getAll());
     }
 
     @Cron(CronExpression.EVERY_5_SECONDS)
     cronMotion() {
         this.logger.log(SensorsController.getMotionSensorData());
+        console.log(SensorsController.getMotionSensorData());
     }
 }
