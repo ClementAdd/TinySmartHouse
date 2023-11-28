@@ -7,18 +7,18 @@ export class SensorsController {
 
     constructor(private readonly sensorsService: SensorsService) {}
 
-    @Get()
-    getTemperature(): string {
+    @Get("temperature")
+    getTemperature(): Promise<string> {
         return this.sensorsService.getTemperature();
     }
 
-    @Get()
-    getBarometry(): string {
+    @Get("barometry")
+    getBarometry(): Promise<string> {
         return this.sensorsService.getBarometry();
     }
 
     @Get("hygrometry")
-    getHygrometry(): string {
+    getHygrometry(): Promise<string> {
         return this.sensorsService.getHygrometry();
     }
 }

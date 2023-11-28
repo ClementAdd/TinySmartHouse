@@ -1,46 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { SensorsController } from './sensors.controller';
-import { SerialPort } from 'serialport';
-import { SerialService } from '../serial/serial.service';
-
+import {Injectable} from '@nestjs/common';
+import {SerialService} from '../serial/serial.service';
 @Injectable()
 export class SensorsService {
 
     housePort = SerialService.housePort;
 
-    getTemperature(): string {
-        const strTemperature = "";
+    private getSensorData(command: string, unit: string): Promise<string> {
+        this.housePort.write(`${command}\n`);
 
-        const temp = this.housePort.write('GET_TEMP\n');
-        //return temp;
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new Error('Timeout after 5 seconds'));
+            }, 5000);
 
-        return strTemperature;
-    }
-
-    getBarometry(): string {
-        const strBarometry = "";
-
-        const baro = this.housePort.write('GET_BARO\n');
-
-        return strBarometry;
-    }
-
-    getHygrometry(): string {
-        this.housePort.write('GET_HUMIDITY\n');
-        //Get the output from the serial port
-        this.housePort.on('data', function (data) {
-            console.log('Data:', Buffer.from(data, 'hex').toString());
+            this.housePort.once('data', (data) => {
+                clearTimeout(timeout);
+                let result = Buffer.from(data, 'hex').toString();
+                let resultArray = result.split('\n');
+                const newResultArray = resultArray.map((item) => {
+                    return item.replace('\r', '');
+                });
+                const filteredResultArray = newResultArray.filter((item: string) => item !== '');
+                if (filteredResultArray[2] === 'OK') {
+                    let jsonResult = {
+                        httpCode: 200,
+                        value: filteredResultArray[1],
+                        unit: unit,
+                        date: new Date().toISOString(),
+                    }
+                    resolve(JSON.stringify(jsonResult));
+                }
+            });
         });
+    }
 
+    getTemperature(): Promise<string> {
+        return this.getSensorData('GET_TEMP', '°C');
+    }
 
-        // let hygrotest = "";
-        //
-        // console.log("hygro");
-        // let hygrometry = this.housePort.on('data', function (data) {
-        //     console.log('Data:', Buffer.from(data, 'hex').toString());
-        //     hygrotest = data;
-        // });
+    getBarometry(): Promise<string> {
+        return this.getSensorData('GET_BARO', 'hPa');
+    }
 
-        return 'hygrotest';
+    getHygrometry(): Promise<string> {
+        return this.getSensorData('GET_HUMIDITY', '%');
     }
 }
