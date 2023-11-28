@@ -17,7 +17,7 @@ export class SensorsController {
         return this.sensorsService.getBarometry();
     }
 
-    @Get()
+    @Get("hygrometry")
     getHygrometry(): string {
         return this.sensorsService.getHygrometry();
     }

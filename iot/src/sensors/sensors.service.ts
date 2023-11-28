@@ -1,20 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { SensorsController } from './sensors.controller';
 import { SerialPort } from 'serialport';
+import { SerialService } from '../serial/serial.service';
 
 @Injectable()
 export class SensorsService {
 
-    public static housePort = new SerialPort({
-        path: '/dev/tty.usbserial-1130',
-        baudRate: 9600,
-        autoOpen: true
-    })
+    housePort = SerialService.housePort;
 
     getTemperature(): string {
         const strTemperature = "";
 
-        const temp = SensorsService.housePort.write('GET_TEMP\n');
+        const temp = this.housePort.write('GET_TEMP\n');
         //return temp;
 
         return strTemperature;
@@ -23,22 +20,27 @@ export class SensorsService {
     getBarometry(): string {
         const strBarometry = "";
 
-        const baro = SensorsService.housePort.write('GET_BARO\n');
+        const baro = this.housePort.write('GET_BARO\n');
 
         return strBarometry;
     }
 
     getHygrometry(): string {
-        const strHygrometry = "";
+        this.housePort.write('GET_HUMIDITY\n');
+        //Get the output from the serial port
+        this.housePort.on('data', function (data) {
+            console.log('Data:', Buffer.from(data, 'hex').toString());
+        });
 
-        const hygro = SensorsService.housePort.write('GET_HUMIDITY\n');
-        const hygrotest = SensorsService.housePort.read();
 
-        console.log("hygro");
-        console.log(hygro);
-        console.log("hygrotest");
-        console.log(hygrotest);
+        // let hygrotest = "";
+        //
+        // console.log("hygro");
+        // let hygrometry = this.housePort.on('data', function (data) {
+        //     console.log('Data:', Buffer.from(data, 'hex').toString());
+        //     hygrotest = data;
+        // });
 
-        return strHygrometry;
+        return 'hygrotest';
     }
 }

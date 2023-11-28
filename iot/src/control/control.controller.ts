@@ -1,5 +1,6 @@
 import {Controller, Get, Post} from '@nestjs/common';
 import {SerialPort} from "serialport";
+import {SerialService} from "../serial/serial.service";
 
 @Controller('control')
 export class ControlController {
@@ -7,11 +8,7 @@ export class ControlController {
     port: SerialPort;
 
     constructor() {
-        this.port = new SerialPort({
-            path: '/dev/tty.usbserial-1130',
-            baudRate: 9600,
-            autoOpen: true
-        });
+        this.port = SerialService.housePort;
 
         this.port.on('data', function (data) {
             console.log('Data:', Buffer.from(data, 'hex').toString());
