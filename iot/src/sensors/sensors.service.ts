@@ -45,4 +45,8 @@ export class SensorsService {
     getHygrometry(): Promise<string> {
         return this.getSensorData('GET_HUMIDITY', '%');
     }
+
+    getMotionSensorData(): Promise<string> {
+        return this.getSensorData('GET_PIR', '');
+    }
 }
