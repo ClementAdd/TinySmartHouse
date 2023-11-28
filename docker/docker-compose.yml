@@ -6,6 +6,7 @@ services:
     image: mysql:latest
     volumes:
       - db_data:/var/lib/mysql
+    container_name: MySQL
     restart: always
     ports:
       - "3306:3306"
@@ -22,6 +23,7 @@ services:
     depends_on:
       - db
     image: phpmyadmin:latest
+    container_name: phpmyadmin
     restart: always
     ports:
       - "8090:80"
@@ -36,6 +38,13 @@ services:
     image: rabbitmq:3.12-management
     container_name: rabbitMQ
     restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq:/etc/rabbitmq/
+      - rabbitmq_lib:/var/lib/rabbitmq/
+      - rabbitmq_logs:/var/log/rabbitmq/
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -45,3 +54,6 @@ networks:
 
 volumes:
   db_data:
+  rabbitmq_logs:
+  rabbitmq_lib:
+  rabbitmq:
