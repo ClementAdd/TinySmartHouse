@@ -21,8 +21,9 @@ export class SensorsController {
         return this.sensorsService.getHygrometry();
     }
 
-    @Get("all")
-    getAll(): Promise<string> {
-        return this.sensorsService.getAll();
+    @Get("motion")
+    getMotionSensorData(): Promise<string> {
+        return this.sensorsService.getMotionSensorData();
     }
+    
 }

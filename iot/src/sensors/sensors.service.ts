@@ -73,4 +73,8 @@ export class SensorsService {
             });
         });
     }
+
+    getMotionSensorData(): Promise<string> {
+        return this.getSensorData('GET_PIR', '');
+    }
 }
