@@ -1,13 +1,15 @@
 import {Controller, Get, Post} from '@nestjs/common';
 import {SerialPort} from "serialport";
 import {SerialService} from "../serial/serial.service";
+import {SensorsService} from "../sensors/sensors.service";
+import {ControlService} from "./control.service";
 
 @Controller('control')
 export class ControlController {
 
     port: SerialPort;
 
-    constructor() {
+    constructor(private readonly controlService: ControlService) {
         this.port = SerialService.housePort;
 
         this.port.on('data', function (data) {
@@ -17,61 +19,21 @@ export class ControlController {
 
     @Post("lightOn")
     lightOn() {
-        if (!this.port.isOpen) {
-            console.log('Port is not open');
-            return;
-        }
-        this.port.write("LIGHT_ON\n", (err) => {
-            if (err) {
-                return console.log('Error on write: ', err.message);
-            }
-            console.log('message written');
-        });
+        return this.controlService.lightOn(this.port);
     }
-
     @Post("lightOff")
     lightOff() {
-        if (!this.port.isOpen) {
-            console.log('Port is not open');
-            return;
-        }
-        this.port.write("LIGHT_OFF\n", (err) => {
-            if (err) {
-                return console.log('Error on write: ', err.message);
-            }
-            console.log('message written');
-
-        });
+        return this.controlService.lightOff(this.port);
     }
 
     @Post("blindOn")
     blindOn() {
-        if (!this.port.isOpen) {
-            console.log('Port is not open');
-            return;
-        }
-        this.port.write("BLIND_OPEN\n", (err) => {
-            if (err) {
-                return console.log('Error on write: ', err.message);
-            }
-            console.log('message written');
-
-        });
+       return this.controlService.blindOn(this.port);
     }
 
     @Post("blindOff")
     blindOff() {
-        if (!this.port.isOpen) {
-            console.log('Port is not open');
-            return;
-        }
-        this.port.write("BLIND_CLOSE\n", (err) => {
-            if (err) {
-                return console.log('Error on write: ', err.message);
-            }
-            console.log('message written');
-
-        });
+     return this.controlService.blindOff(this.port);
     }
 
 
