@@ -3,32 +3,32 @@ import { SensorsService } from './sensors.service';
 
 @Controller('sensors')
 export class SensorsController {
-    static sensorsService: any;
+    //static sensorsService: any;
 
     constructor(private readonly sensorsService: SensorsService) {}
 
     @Get("temperature")
-    public static getTemperature(): Promise<string> {
+     getTemperature(): Promise<string> {
         return this.sensorsService.getTemperature();
     }
 
     @Get("barometry")
-    public static getBarometry(): Promise<string> {
+   getBarometry(): Promise<string> {
         return this.sensorsService.getBarometry();
     }
 
     @Get("hygrometry")
-    public static getHygrometry(): Promise<string> {
+   getHygrometry(): Promise<string> {
         return this.sensorsService.getHygrometry();
     }
 
     @Get("motion")
-    public static getMotionSensorData(): Promise<string> {
+    getMotionSensorData(): Promise<string> {
         return this.sensorsService.getMotionSensorData();
     }
 
     @Get("all")
-    public static getAll(): Promise<string> {
+    getAll(): Promise<string> {
         return this.sensorsService.getAll();
     }
     
