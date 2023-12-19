@@ -21,6 +21,7 @@ export class ControlController {
     lightOn() {
         return this.controlService.lightOn(this.port);
     }
+
     @Post("lightOff")
     lightOff() {
         return this.controlService.lightOff(this.port);
@@ -28,11 +29,41 @@ export class ControlController {
 
     @Post("blindOn")
     blindOn() {
-       return this.controlService.blindOn(this.port);
+        return this.controlService.blindOn(this.port);
     }
 
     @Post("blindOff")
     blindOff() {
         return this.controlService.blindOff(this.port);
     }
+
+    isDoorOpen = false;
+
+    @Post('toggleDoor')
+    toggleDoor(): void {
+
+        if (this.isDoorOpen) {
+            this.blindOff()
+            this.isDoorOpen = false;
+        } else {
+            this.blindOn()
+            this.isDoorOpen = true;
+        }
+    }
+
+    isLightOn = false;
+
+    @Post('toggleLight')
+    toggleLight(): void {
+
+        if (this.isLightOn) {
+            this.lightOff()
+            this.isLightOn = false;
+        } else {
+            this.lightOn()
+            this.isLightOn = true;
+        }
+    }
+
+
 }

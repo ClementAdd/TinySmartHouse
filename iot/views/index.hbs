@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Style pour les encadrés */
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .side-boxes {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .box {
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            margin-bottom: 20px;
+
+        }
+
+        /* Style pour l'encadré principal */
+        #boxMain {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            text-align: center;
+            margin-right: 20px;
+            margin-top: 20px;
+        }
+
+        /* Style pour les boutons */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        /* Couleur du bouton en fonction de l'état */
+        .open {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .closed {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .variable-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(48%, 1fr));
+            gap: 10px;
+        }
+
+        .variable-box {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            text-align: center;
+        }
+    </style>
+    <title>Gestion Devices</title>
+</head>
+<body>
+
+<div class="container">
+    <!-- Encadré "Porte" -->
+    <div class="side-boxes">
+        <div class="box" id="boxDoor">
+            <h2>Porte</h2>
+            <button class="btn" id="btnDoor">Ouvrir</button>
+        </div>
+
+        <!-- Encadré "Lumière" -->
+        <div class="box" id="boxLight">
+            <h2>Lumière</h2>
+            <button class="btn" id="btnLight">Allumer</button>
+        </div>
+    </div>
+
+    <div class="box" id="boxMain">
+        <div class="variable-container">
+            <!-- Hygrométrie -->
+            <div class="variable-box" id="humidityBox">
+                <p>Hygrométrie: <span id="humidity">{{humidity}}</span></p>
+            </div>
+
+            <!-- Température -->
+            <div class="variable-box" id="temperatureBox">
+                <p>Température: <span id="temperature">{{temperature}}</span></p>
+            </div>
+
+            <!-- Pression -->
+            <div class="variable-box" id="pressureBox">
+                <p>Pression: <span id="pressure"></span>{{pressure}}</p>
+            </div>
+
+            <button class="btn" id="btnGetVariables">GetVariables()</button>
+
+            <!-- Ajoutez d'autres variables au besoin -->
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    // JavaScript pour gérer l'état ouvert/fermé du premier encadré (Porte)
+    const boxDoor = document.getElementById('boxDoor');
+    const btnDoor = document.getElementById('btnDoor');
+    const btnGetVariables = document.getElementById('btnGetVariables');
+
+    let isOpenDoor = false;
+
+    btnDoor.addEventListener('click', function () {
+        isOpenDoor = !isOpenDoor;
+        if (isOpenDoor) {
+            boxDoor.style.backgroundColor = '#e0f7fa';
+            btnDoor.textContent = 'Fermer';
+            btnDoor.classList.remove('open');
+            btnDoor.classList.add('closed');
+
+            // Ajoutez cette requête fetch pour appeler l'API
+            fetch('/control/toggleDoor', {method: 'POST'})
+                    .then(response => response.text())
+                    .then(data => {
+                        // Log the response from the API
+                        console.log(data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        } else {
+            boxDoor.style.backgroundColor = '';
+            btnDoor.textContent = 'Ouvrir';
+            btnDoor.classList.remove('closed');
+            btnDoor.classList.add('open');
+
+            // Ajoutez cette requête fetch pour appeler l'API
+            fetch('/control/toggleDoor', {method: 'POST'})
+                    .then(response => response.text())
+                    .then(data => {
+                        // Log the response from the API
+                        console.log(data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        }
+    });
+
+    btnGetVariables.addEventListener('click', function () {
+        window.location.reload();
+    });
+
+    const boxLight = document.getElementById('boxLight');
+    const btnLight = document.getElementById('btnLight');
+
+    let isLightOn = false;
+
+    btnLight.addEventListener('click'
+            , function () {
+                isLightOn = !isLightOn;
+                if (isLightOn) {
+                    boxLight.style.backgroundColor = '#e0f7fa';
+                    btnLight.textContent = 'Éteindre';
+                    btnLight.classList.remove('open');
+                    btnLight.classList.add('closed');
+
+                    // Ajoutez cette requête fetch pour appeler l'API
+                    fetch('/control/toggleLight', {method: 'POST'})
+                            .then(response => response.text())
+                            .then(data => {
+                                // Log the response from the API
+                                console.log(data);
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                } else {
+                    boxLight.style.backgroundColor = '';
+                    btnLight.textContent = 'Allumer';
+                    btnLight.classList.remove('closed');
+                    btnLight.classList.add('open');
+
+                    // Ajoutez cette requête fetch pour appeler l'API
+                    fetch('/control/toggleLight', {method: 'POST'})
+                            .then(response => response.text())
+                            .then(data => {
+                                // Log the response from the API
+                                console.log(data);
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                }
+            });
+</script>
+
+</body>
+</html>
