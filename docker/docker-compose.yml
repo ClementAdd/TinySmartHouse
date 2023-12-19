@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  # Database (Postgres)
+  db:
+    image: postgres:latest
+    container_name: Postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tiny-smart-house
+    networks:
+      - postgres-pgadmin
+
+  # Postgres admin
+  pgadmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4:latest
+    container_name: PgAdmin
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - postgres-pgadmin
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitMQ
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq:/etc/rabbitmq/
+      - rabbitmq_lib:/var/lib/rabbitmq/
+      - rabbitmq_logs:/var/log/rabbitmq/
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+networks:
+  postgres-pgadmin:
+
+volumes:
+  postgres:
+  pgadmin:
+  rabbitmq_logs:
+  rabbitmq_lib:
+  rabbitmq:
