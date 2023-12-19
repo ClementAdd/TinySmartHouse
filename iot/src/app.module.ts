@@ -8,6 +8,7 @@ import {TaskSchedulerModule} from './task-scheduler/task-scheduler.module';
 import {ServeStaticModule} from "@nestjs/serve-static";
 import {join} from 'path';
 import {SensorsController} from "./sensors/sensors.controller";
+import {EventsGateway} from './events/events.gateway';
 
 @Module({
     imports: [ControlModule, SensorsModule, SerialModule, TaskSchedulerModule,
@@ -17,7 +18,7 @@ import {SensorsController} from "./sensors/sensors.controller";
         }),
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, EventsGateway],
 })
 export class AppModule {
 }

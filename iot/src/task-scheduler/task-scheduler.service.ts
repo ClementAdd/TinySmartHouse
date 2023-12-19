@@ -2,6 +2,7 @@ import {Injectable, Logger} from '@nestjs/common';
 import {Cron, CronExpression} from '@nestjs/schedule';
 import {SensorsController} from 'src/sensors/sensors.controller';
 import {SensorsService} from "../sensors/sensors.service";
+import {Subject} from "rxjs";
 
 @Injectable()
 export class TaskSchedulerService {
@@ -16,6 +17,8 @@ export class TaskSchedulerService {
     }
 
     motionSensorState: boolean = false;
+    motionSensorState$ = new Subject<boolean>();
+
 
     @Cron(CronExpression.EVERY_5_SECONDS)
     cronMotion() {
@@ -25,6 +28,8 @@ export class TaskSchedulerService {
             } else {
                 this.motionSensorState = false;
             }
+
+            this.motionSensorState$.next(this.motionSensorState);
 
             console.log('Motion sensor : ' + this.motionSensorState);
         }));
