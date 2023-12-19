@@ -76,6 +76,75 @@
             border-radius: 15px;
             text-align: center;
         }
+
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #dc3737;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        /* Show the snackbar when clicking on a button (class added with JavaScript) */
+        #snackbar.show {
+            visibility: visible; /* Show the snackbar */
+            /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+            However, delay the fade out process for 2.5 seconds */
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        /* Animations to fade the snackbar in and out */
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
     </style>
     <title>Gestion Devices</title>
 </head>
@@ -115,19 +184,40 @@
 
             <button class="btn" id="btnGetVariables">GetVariables()</button>
 
-            <!-- Ajoutez d'autres variables au besoin -->
+            <div id="snackbar">Mouvement detecté</div>
+
         </div>
     </div>
 </div>
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
+
 <script>
-    // JavaScript pour gérer l'état ouvert/fermé du premier encadré (Porte)
+
+    const socket = io();
+
+    function showToast() {
+        console.log("showToast")
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 5000);
+    }
+
+    socket.on('motionDetected', function (data) {
+        console.log(data + " motion");
+        showToast();
+    });
+
     const boxDoor = document.getElementById('boxDoor');
     const btnDoor = document.getElementById('btnDoor');
     const btnGetVariables = document.getElementById('btnGetVariables');
 
     let isOpenDoor = false;
+
+
 
     btnDoor.addEventListener('click', function () {
         isOpenDoor = !isOpenDoor;
@@ -140,10 +230,6 @@
             // Ajoutez cette requête fetch pour appeler l'API
             fetch('/control/toggleDoor', {method: 'POST'})
                     .then(response => response.text())
-                    .then(data => {
-                        // Log the response from the API
-                        console.log(data);
-                    })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
@@ -156,10 +242,6 @@
             // Ajoutez cette requête fetch pour appeler l'API
             fetch('/control/toggleDoor', {method: 'POST'})
                     .then(response => response.text())
-                    .then(data => {
-                        // Log the response from the API
-                        console.log(data);
-                    })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
@@ -175,43 +257,36 @@
 
     let isLightOn = false;
 
-    btnLight.addEventListener('click'
-            , function () {
-                isLightOn = !isLightOn;
-                if (isLightOn) {
-                    boxLight.style.backgroundColor = '#e0f7fa';
-                    btnLight.textContent = 'Éteindre';
-                    btnLight.classList.remove('open');
-                    btnLight.classList.add('closed');
+    btnLight.addEventListener('click', function () {
+        isLightOn = !isLightOn;
+        if (isLightOn) {
+            boxLight.style.backgroundColor = '#e0f7fa';
+            btnLight.textContent = 'Éteindre';
+            btnLight.classList.remove('open');
+            btnLight.classList.add('closed');
 
-                    // Ajoutez cette requête fetch pour appeler l'API
-                    fetch('/control/toggleLight', {method: 'POST'})
-                            .then(response => response.text())
-                            .then(data => {
-                                // Log the response from the API
-                                console.log(data);
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error);
-                            });
-                } else {
-                    boxLight.style.backgroundColor = '';
-                    btnLight.textContent = 'Allumer';
-                    btnLight.classList.remove('closed');
-                    btnLight.classList.add('open');
+            // Ajoutez cette requête fetch pour appeler l'API
+            fetch('/control/toggleLight', {method: 'POST'})
+                    .then(response => response.text())
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        } else {
+            boxLight.style.backgroundColor = '';
+            btnLight.textContent = 'Allumer';
+            btnLight.classList.remove('closed');
+            btnLight.classList.add('open');
 
-                    // Ajoutez cette requête fetch pour appeler l'API
-                    fetch('/control/toggleLight', {method: 'POST'})
-                            .then(response => response.text())
-                            .then(data => {
-                                // Log the response from the API
-                                console.log(data);
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error);
-                            });
-                }
-            });
+            // Ajoutez cette requête fetch pour appeler l'API
+            fetch('/control/toggleLight', {method: 'POST'})
+                    .then(response => response.text())
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+        }
+    });
+
+
 </script>
 
 </body>
