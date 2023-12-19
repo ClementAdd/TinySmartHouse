@@ -77,8 +77,4 @@ export class SensorsService {
     getMotionSensorData(): Promise<string> {
         return this.getSensorData('Motion Sensor','GET_PIR', '');
     }
-
-    getMotionSensorData(): Promise<string> {
-        return this.getSensorData('GET_PIR', '');
-    }
 }
