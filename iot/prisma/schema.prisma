@@ -11,16 +11,9 @@ datasource db {
 }
 
 model Login {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  username  String  @unique
-  password  String
-  profile   Profile @relation(fields: [profileId], references: [id])
-  profileId Int     @unique
-}
-
-model Profile {
-  id    Int    @id @default(autoincrement())
-  name  String
-  login Login?
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String @unique
+  name     String
+  password String
 }
