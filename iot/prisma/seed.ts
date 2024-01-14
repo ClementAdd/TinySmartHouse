@@ -1,33 +1,27 @@
-// prisma/seed.ts
-
+import * as bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
+const roundsOfHashing = Number(process.env.HASHING_ROUNDS_NUM) || 10;
 
 async function main() {
   const users = ['user', 'admin'];
   // create users
   for (const user of users) {
-    const profile = await prisma.profile.create({
-      data: { name: user },
-    });
+    const hashedPassword = await bcrypt.hash(user, roundsOfHashing);
 
     await prisma.login.create({
       data: {
         email: `${user}@test.fr`,
         username: user,
-        password: user,
-        profileId: profile.id,
+        name: user,
+        password: hashedPassword,
       },
     });
   }
 
-  const allUsers = await prisma.login.findMany({
-    include: {
-      profile: true,
-    },
-  });
+  const allUsers = await prisma.login.findMany();
   console.dir(allUsers, { depth: null });
 }
 
