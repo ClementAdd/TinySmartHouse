@@ -33,6 +33,9 @@ export class AuthController {
 
   @Post('signUp')
   signUp(@Body() { name, email, password }: SignUpDto) {
-    return this.authService.signUp({ name, email, password }, AuthMethod.JWT);
+    return this.authService.signUp(
+      { name, email, password },
+      AuthMethod.CLASSIC,
+    );
   }
 }

@@ -1,4 +1,4 @@
 export enum AuthMethod {
-  OAUTH = 'oauth',
-  JWT = 'jwt',
+  OAUTH = 'oauth', // Use third party provider
+  CLASSIC = 'classic', // Use classic email / password login
 }
