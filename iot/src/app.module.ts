@@ -20,14 +20,14 @@ import { UsersService } from './users/users.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ControlModule,
-    SensorsModule,
-    SerialModule,
-    TaskSchedulerModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api/(.*)'],
     }),
+    ControlModule,
+    SensorsModule,
+    SerialModule,
+    TaskSchedulerModule,
     AuthModule,
     PrismaModule,
     UsersModule,
