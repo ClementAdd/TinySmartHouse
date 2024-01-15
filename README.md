@@ -15,20 +15,19 @@ docker compose -p tiny-smart-house up -d
 
 ### Docker containers info :
 Here you can find a list information about each container that we created earlier :
-- MySQL :
+- Postgres :
     * ports:
-      - 3306
+      - 5432
     * environment:
-      - MYSQL_ROOT_PASSWORD: admin
-      - MYSQL_USER: user
-      - MYSQL_PASSWORD: password
-      - MYSQL_DATABASE: tiny-smart-house
-- PhpMyAdmin :
+      - POSTGRES_USER: user
+      - POSTGRES_PASSWORD: password
+      - POSTGRES_DB: tiny-smart-house
+- PgAdmin :
     * ports:
-      - 8090
+      - 8888
     * environment:
-      - PMA_HOST: db
-      - MYSQL_ROOT_PASSWORD: admin
+      - PGADMIN_DEFAULT_EMAIL: user@admin.com
+      - PGADMIN_DEFAULT_PASSWORD: password
 - RabbitMQ :
     * ports:
       - 5672
@@ -36,3 +35,13 @@ Here you can find a list information about each container that we created earlie
     * environment:
       - RABBITMQ_DEFAULT_USER: user
       - RABBITMQ_DEFAULT_PASS: password
+
+## PostgreSQL admin
+Do you have the problem of connecting to your database in pgadmin ?
+
+Here You can find a link to a tutorial that will guide you to establish your first connection to out PostgreSQL container.
+
+[Let's take a look at our tutorial 📝](https://www.commandprompt.com/education/how-to-run-postgresql-and-pgadmin-using-docker/#:~:text=Step%206%3A%20Access%20pgAdmin4%20on%20Browser)
+
+
+[Open PostgreSQL admin on your local machine 🛢️](http://localhost:8888/)
