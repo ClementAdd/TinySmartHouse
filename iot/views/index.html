@@ -116,7 +116,7 @@
         </div>
 
         <div class="box" id="btnScenarios">
-           <a href="scenarios.hbs">
+           <a href="scenarios.html">
                 <button>Scénarios</button>
             </a>
         </div>
@@ -147,33 +147,14 @@
 
             <button class="btn" id="btnGetVariables">GetVariables()</button>
 
-            <div id="snackbar">Mouvement detecté</div>
-
+            <!-- Ajoutez d'autres variables au besoin -->
         </div>
     </div>
 </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
-
 <script>
-
-    const socket = io();
-
-    function showToast() {
-        console.log("showToast")
-        var x = document.getElementById("snackbar");
-        x.className = "show";
-        setTimeout(function () {
-            x.className = x.className.replace("show", "");
-        }, 5000);
-    }
-
-    socket.on('motionDetected', function (data) {
-        console.log(data + " motion");
-        showToast();
-    });
-
+    // JavaScript pour gérer l'état ouvert/fermé du premier encadré (Porte)
     const boxDoor = document.getElementById('boxDoor');
     const btnDoor = document.getElementById('btnDoor');
     const btnGetVariables = document.getElementById('btnGetVariables');
@@ -207,6 +188,10 @@
             // Ajoutez cette requête fetch pour appeler l'API
             fetch('/control/toggleDoor', {method: 'POST'})
                     .then(response => response.text())
+                    .then(data => {
+                        // Log the response from the API
+                        console.log(data);
+                    })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
@@ -219,6 +204,10 @@
             // Ajoutez cette requête fetch pour appeler l'API
             fetch('/control/toggleDoor', {method: 'POST'})
                     .then(response => response.text())
+                    .then(data => {
+                        // Log the response from the API
+                        console.log(data);
+                    })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
@@ -234,25 +223,30 @@
 
     let isLightOn = false;
 
-    btnLight.addEventListener('click', function () {
-        isLightOn = !isLightOn;
-        if (isLightOn) {
-            boxLight.style.backgroundColor = '#e0f7fa';
-            btnLight.textContent = 'Éteindre';
-            btnLight.classList.remove('open');
-            btnLight.classList.add('closed');
+    btnLight.addEventListener('click'
+            , function () {
+                isLightOn = !isLightOn;
+                if (isLightOn) {
+                    boxLight.style.backgroundColor = '#e0f7fa';
+                    btnLight.textContent = 'Éteindre';
+                    btnLight.classList.remove('open');
+                    btnLight.classList.add('closed');
 
-            // Ajoutez cette requête fetch pour appeler l'API
-            fetch('/control/toggleLight', {method: 'POST'})
-                    .then(response => response.text())
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-        } else {
-            boxLight.style.backgroundColor = '';
-            btnLight.textContent = 'Allumer';
-            btnLight.classList.remove('closed');
-            btnLight.classList.add('open');
+                    // Ajoutez cette requête fetch pour appeler l'API
+                    fetch('/control/toggleLight', {method: 'POST'})
+                            .then(response => response.text())
+                            .then(data => {
+                                // Log the response from the API
+                                console.log(data);
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                } else {
+                    boxLight.style.backgroundColor = '';
+                    btnLight.textContent = 'Allumer';
+                    btnLight.classList.remove('closed');
+                    btnLight.classList.add('open');
 
                     // Ajoutez cette requête fetch pour appeler l'API
                     fetch('/control/toggleLight', {method: 'POST'})
