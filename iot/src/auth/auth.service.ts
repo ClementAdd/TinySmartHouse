@@ -10,6 +10,8 @@ import { CreateUserDto } from 'src/users/types/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthMethod } from './constants';
 import * as bcrypt from 'bcrypt';
+import { LoginOutput } from './types/login.dto';
+import { SignupOutput } from './types/signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -19,12 +21,15 @@ export class AuthService {
     private userService: UsersService,
   ) {}
 
-  async signUp(createUserDto: CreateUserDto, authMethod: AuthMethod) {
+  async signUp(
+    createUserDto: CreateUserDto,
+    authMethod: AuthMethod,
+  ): Promise<SignupOutput | LoginOutput> {
     const user = await this.prisma.login.findUnique({
       where: { email: createUserDto.email },
     });
 
-    if (user && authMethod === AuthMethod.JWT) {
+    if (user && authMethod === AuthMethod.CLASSIC) {
       throw new ConflictException(
         `There is already an account with this email: ${createUserDto.email}`,
       );
@@ -51,7 +56,7 @@ export class AuthService {
     };
   }
 
-  async login(email: string, password: string): Promise<any> {
+  async login(email: string, password: string): Promise<LoginOutput> {
     const user = await this.prisma.login.findUnique({
       where: { email: email },
     });
