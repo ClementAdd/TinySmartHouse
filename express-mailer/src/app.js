@@ -3,8 +3,12 @@ import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
+import rabbitmqConsumer from "./rabbitMQ/mailer/consumer.js";
 
 const app = express();
+const loggerFormat = `[:date[web]] => :method ":url" :status => :response-time ms [:user-agent]`;
+
+await rabbitmqConsumer();
 
 app.use(logger("dev"));
 app.use(json());
