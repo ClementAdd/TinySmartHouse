@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   # Database (Postgres)
@@ -27,14 +27,14 @@ services:
     ports:
       - "8888:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: user@admin.com
-      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DEFAULT_EMAIL: user@admin.com   # PgAdmin email
+      PGADMIN_DEFAULT_PASSWORD: password      # PgAdmin password
     networks:
       - postgres-pgadmin
     volumes:
       - pgadmin:/var/lib/pgadmin
 
-  # RabbitMQ
+  # RabbitMQ + Management
   rabbitmq:
     image: rabbitmq:3.12-management
     container_name: rabbitMQ
@@ -47,11 +47,12 @@ services:
       - rabbitmq_lib:/var/lib/rabbitmq/
       - rabbitmq_logs:/var/log/rabbitmq/
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672:5672"     # RabbitMQ connection port
+      - "15672:15672"   # RabbitMQ management port
 
 networks:
   postgres-pgadmin:
+
 
 volumes:
   postgres:

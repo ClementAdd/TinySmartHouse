@@ -2,11 +2,15 @@ import createError from "http-errors";
 import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import { config } from "dotenv";
+
 import indexRouter from "./routes/index.js";
 import rabbitmqConsumer from "./rabbitMQ/mailer/consumer.js";
 
 const app = express();
 const loggerFormat = `[:date[web]] => :method ":url" :status => :response-time ms [:user-agent]`;
+
+config();
 
 await rabbitmqConsumer();
 

@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:seed": "npx prisma db seed",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:generate-type": "npx prisma generate"
+    "prisma:generate-type": "npx prisma generate",
+    "rabbitmq-management:enable": "docker exec rabbitMQ rabbitmq-plugins enable rabbitmq_management"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

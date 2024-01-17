@@ -11,7 +11,9 @@ const testMessage = {
 const queue = "send_mail_queue";
 const text = process.argv.slice(2).join(" ") || testMessage;
 
-(async () => {
+// TODO : This is a script now but later : change url to env variable
+
+const producer = async () => {
   let connection;
   try {
     connection = await connect("amqp://user:password@localhost:5672");
@@ -25,8 +27,17 @@ const text = process.argv.slice(2).join(" ") || testMessage;
 
     await channel.close();
   } catch (err) {
-    console.warn(err);
+    console.error(err);
   } finally {
     await connection.close();
   }
-})();
+};
+
+// TODO : remove this part after finishing the test of sending messages
+
+producer().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
+
+export default producer;
