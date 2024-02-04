@@ -5,14 +5,14 @@ import logger from "morgan";
 import { config } from "dotenv";
 
 import indexRouter from "./routes/index.js";
-import rabbitmqConsumer from "./rabbitMQ/mailer/consumer.js";
+import mailerConsumer from "./rabbitMQ/mailer/consumer.js";
 
 const app = express();
 const loggerFormat = `[:date[web]] => :method ":url" :status => :response-time ms [:user-agent]`;
 
 config();
 
-await rabbitmqConsumer();
+await mailerConsumer();
 
 app.use(logger("dev"));
 app.use(json());

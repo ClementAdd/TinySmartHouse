@@ -2,7 +2,7 @@ import amqp from "amqplib";
 import sendMail from "../../mailer/send-mail.js";
 
 const mailerConsumer = async () => {
-  const queue = "send_mail_queue";
+  const queue = "SEND_MAIL_QUEUE";
 
   let connection;
   try {
@@ -20,23 +20,18 @@ const mailerConsumer = async () => {
       queue,
       async (message) => {
         const receivedMessage = message.content.toString();
-        const parsedMessage = JSON.parse(receivedMessage);
+        const {
+          data: { username, email, name, accessToken: token },
+        } = JSON.parse(receivedMessage);
         console.log(`[x] Received ${JSON.parse(receivedMessage)} from "${queue}"`);
 
-        await sendMail();
-        console.log("[x] Done");
+        await sendMail({ name, email, email_type: "sign-up", token, username });
         channel.ack(message);
-
-        // const seconds = receivedMessage.split(".").length - 1;
-        // setTimeout(() => {
-        //   console.log("[x] Done");
-        //   channel.ack(message);
-        // }, seconds * 1000);
       },
       { noAck: false }
     );
 
-    console.log("🥱 Waiting for messages from RabbitMQ . . .");
+    console.log(`🥱 Waiting for messages from RabbitMQ ${queue} . . .`);
   } catch (err) {
     console.error("rabbitMq error => ", err);
     connection.close();

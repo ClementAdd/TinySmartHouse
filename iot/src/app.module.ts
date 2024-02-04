@@ -14,6 +14,7 @@ import { TaskSchedulerModule } from './task-scheduler/task-scheduler.module';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
+import { RabbitMqModule } from './rabbit-mq/rabbit-mq.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UsersService } from './users/users.service';
     AuthModule,
     PrismaModule,
     UsersModule,
+    RabbitMqModule,
   ],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService, EventsGateway],
