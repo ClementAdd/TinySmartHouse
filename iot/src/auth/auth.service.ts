@@ -1,6 +1,9 @@
 import {
+  BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -8,14 +11,16 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/types/create-user.dto';
 import { UsersService } from 'src/users/users.service';
-import { AuthMethod } from './constants';
+import { AuthMethod, MAIL_SERVICE } from './constants';
 import * as bcrypt from 'bcrypt';
 import { LoginOutput } from './types/login.dto';
 import { SignupOutput } from './types/signup.dto';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(MAIL_SERVICE) private readonly mailClient: ClientProxy,
     private prisma: PrismaService,
     private jwtService: JwtService,
     private userService: UsersService,
@@ -25,6 +30,14 @@ export class AuthService {
     createUserDto: CreateUserDto,
     authMethod: AuthMethod,
   ): Promise<SignupOutput | LoginOutput> {
+    if (
+      !createUserDto.email ||
+      !createUserDto.name ||
+      !createUserDto.password
+    ) {
+      throw new BadRequestException();
+    }
+
     const user = await this.prisma.login.findUnique({
       where: { email: createUserDto.email },
     });
@@ -50,13 +63,20 @@ export class AuthService {
       username: newUser.username,
     };
 
+    const accessToken = this.jwtService.sign({ userId: newUser.id });
+
+    Logger.log('Sending message to send_mail_queue . . .');
+    this.mailClient.emit('send_mail_queue', { ...data, accessToken });
+
     return {
       data,
-      accessToken: this.jwtService.sign({ userId: newUser.id }),
+      accessToken,
     };
   }
 
   async login(email: string, password: string): Promise<LoginOutput> {
+    if (!email || !password) throw new BadRequestException();
+
     const user = await this.prisma.login.findUnique({
       where: { email: email },
     });
