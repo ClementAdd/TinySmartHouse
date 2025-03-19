@@ -16,4 +16,4 @@ model Login {
   username String @unique
   name     String
   password String
-}
+  }

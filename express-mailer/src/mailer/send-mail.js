@@ -55,7 +55,7 @@ async function sendMail({ name, email, email_type, token, username }) {
     }
 
     console.log("sending message...");
-    const info = transporter.sendMail(message);
+    const info = await transporter.sendMail(message);
 
     console.log("Message sent successfully!");
     console.log(`URL to the message ${getTestMessageUrl(info)}`);

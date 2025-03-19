@@ -5,7 +5,7 @@ import {SerialPort} from "serialport";
 export class SerialService {
 
     public static housePort = new SerialPort({
-        path: '/dev/tty.usbserial-1130',
+        path: '/dev/tty.usbserial-130',
         baudRate: 9600,
         autoOpen: true
     })
