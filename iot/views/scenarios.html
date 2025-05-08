@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scénarios</title>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        .on {
+            background-color: lightgreen;
+        }
+
+        .off {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Scénarios</h1>
+
+    <div id="frise" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Lumière</div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Porte</div>
+    <div class="draggable" draggable="true" ondragstart="drag(event)">Delay</div>
+
+    <button onclick="valider()">Valider</button>
+
+    <script>
+        var choix = [];
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.textContent);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var component = ev.dataTransfer.getData("text");
+            if (component.toLowerCase() != "delay")
+            {
+                var choixUtilisateur = prompt("Choisissez On ou Off pour " + component + " :");
+                if (choixUtilisateur && (choixUtilisateur.toLowerCase() === "on" || choixUtilisateur.toLowerCase() === "off")) {
+                    choix.push({ component, choixUtilisateur: choixUtilisateur.toLowerCase() });
+                    updateFrise();
+                } else {
+                    alert("Veuillez choisir On ou Off.");
+                }
+            }
+            else
+            {    
+                var choixUtilisateur = prompt("Choisissez une durée (en ms) pour " + component + " :");
+                var digitPattern = /^\d+$/;
+                if (choixUtilisateur && choixUtilisateur.match(digitPattern)) {
+                    choix.push({ component, choixUtilisateur: choixUtilisateur.toLowerCase() });
+                    updateFrise();
+                } else {
+                    alert("Veuillez choisir une durée en ms. Only digits.");
+                }
+            }
+        }
+
+        function updateFrise() {
+            var frise = document.getElementById("frise");
+            frise.innerHTML = "";
+            choix.forEach(item => {
+                var div = document.createElement("div");
+                div.textContent = item.component + " (" + item.choixUtilisateur + ")";
+                div.className = item.choixUtilisateur;
+                frise.appendChild(div);
+            });
+        }
+
+        function valider() {
+            localStorage.setItem('choix', JSON.stringify(choix));
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>

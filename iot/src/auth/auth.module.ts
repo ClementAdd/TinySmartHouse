@@ -7,6 +7,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './utils/jwt.strategy';
+import { RabbitMqModule } from 'src/rabbit-mq/rabbit-mq.module';
+import { MAIL_SERVICE } from './constants';
 
 @Module({
   imports: [
@@ -14,9 +16,10 @@ import { JwtStrategy } from './utils/jwt.strategy';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '5m' }, // e.g. 30s, 7d, 24h
+      signOptions: { expiresIn: '24h' }, // e.g. 30s, 7d, 24h
     }),
     UsersModule,
+    RabbitMqModule.register({ name: MAIL_SERVICE }),
   ],
 
   controllers: [AuthController],

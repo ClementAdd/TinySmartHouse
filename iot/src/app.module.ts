@@ -14,23 +14,25 @@ import { TaskSchedulerModule } from './task-scheduler/task-scheduler.module';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
+import { RabbitMqModule } from './rabbit-mq/rabbit-mq.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ControlModule,
-    SensorsModule,
-    SerialModule,
-    TaskSchedulerModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api/(.*)'],
     }),
+    ControlModule,
+    SensorsModule,
+    SerialModule,
+    TaskSchedulerModule,
     AuthModule,
     PrismaModule,
     UsersModule,
+    RabbitMqModule,
   ],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService, EventsGateway],

@@ -11,4 +11,6 @@ export class UserEntity implements Login {
   name: string;
   email: string;
   password: string;
+  verifiedAt: Date | null;
+  createdAt: Date;
 }

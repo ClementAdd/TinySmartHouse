@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Style pour les encadrés */
         body, html {
             height: 100%;
             margin: 0;
@@ -31,7 +30,6 @@
 
         }
 
-        /* Style pour l'encadré principal */
         #boxMain {
             flex: 1;
             padding: 20px;
@@ -42,7 +40,6 @@
             margin-top: 20px;
         }
 
-        /* Style pour les boutons */
         .btn {
             display: block;
             width: 100%;
@@ -53,7 +50,6 @@
             cursor: pointer;
         }
 
-        /* Couleur du bouton en fonction de l'état */
         .open {
             background-color: #4CAF50;
             color: white;
@@ -77,73 +73,30 @@
             text-align: center;
         }
 
-        #snackbar {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: #dc3737;
-            color: #fff;
+        .scenarios-container {
+            flex: 1;
+            border: 2px solid #ccc;
+            border-radius: 15px;
             text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
+            overflow-y: auto; /* Ajout de la propriété overflow-y pour une liste déroulante */
         }
 
-        /* Show the snackbar when clicking on a button (class added with JavaScript) */
-        #snackbar.show {
-            visibility: visible; /* Show the snackbar */
-            /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
-            However, delay the fade out process for 2.5 seconds */
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
         }
 
-        /* Animations to fade the snackbar in and out */
-        @-webkit-keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
+        .scenarios-list {
+            max-height: 300px; /* Hauteur maximale pour la liste déroulante */
+            overflow-y: auto;
         }
 
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @-webkit-keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
+        .scenario-item {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 10px;
         }
     </style>
     <title>Gestion Devices</title>
@@ -151,17 +104,27 @@
 <body>
 
 <div class="container">
-    <!-- Encadré "Porte" -->
     <div class="side-boxes">
         <div class="box" id="boxDoor">
             <h2>Porte</h2>
             <button class="btn" id="btnDoor">Ouvrir</button>
         </div>
 
-        <!-- Encadré "Lumière" -->
         <div class="box" id="boxLight">
             <h2>Lumière</h2>
             <button class="btn" id="btnLight">Allumer</button>
+        </div>
+
+        <div class="box" id="btnScenarios">
+           <a href="scenarios.hbs">
+                <button>Scénarios</button>
+            </a>
+        </div>
+
+        <div class="scenarios-container">
+            <h2>Scénarios Disponibles</h2>
+            <div class="scenarios-list" id="scenariosList">
+            </div>
         </div>
     </div>
 
@@ -217,7 +180,21 @@
 
     let isOpenDoor = false;
 
+    document.addEventListener("DOMContentLoaded", function() {
+        var scenariosList = document.getElementById('scenariosList');
+        var savedScenarios = JSON.parse(localStorage.getItem('scenarios'));
 
+        if (savedScenarios && savedScenarios.length > 0) {
+            savedScenarios.forEach(function(scenario) {
+                var scenarioItem = document.createElement('div');
+                scenarioItem.textContent = scenario;
+                scenarioItem.className = 'scenario-item';
+                scenariosList.appendChild(scenarioItem);
+            });
+        } else {
+            scenariosList.innerHTML = '<p>Aucun scénario disponible.</p>';
+        }
+    });
 
     btnDoor.addEventListener('click', function () {
         isOpenDoor = !isOpenDoor;
@@ -277,16 +254,20 @@
             btnLight.classList.remove('closed');
             btnLight.classList.add('open');
 
-            // Ajoutez cette requête fetch pour appeler l'API
-            fetch('/control/toggleLight', {method: 'POST'})
-                    .then(response => response.text())
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-        }
-    });
+                    // Ajoutez cette requête fetch pour appeler l'API
+                    fetch('/control/toggleLight', {method: 'POST'})
+                            .then(response => response.text())
+                            .then(data => {
+                                // Log the response from the API
+                                console.log(data);
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                }
+            });
 
-
+            
 </script>
 
 </body>
